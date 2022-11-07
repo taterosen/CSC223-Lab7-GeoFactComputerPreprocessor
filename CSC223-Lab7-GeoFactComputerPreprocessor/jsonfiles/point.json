@@ -1,0 +1,18 @@
+// A
+{ 
+"Figure" :
+  { "Description" : "A single point",
+    "Points" :
+	  [
+	    {
+	      "name" : "A",
+		  "x" : 0,
+   	      "y" : 0
+		},
+	  ],
+  
+    "Segments" :
+      [
+      ]
+  }
+}
