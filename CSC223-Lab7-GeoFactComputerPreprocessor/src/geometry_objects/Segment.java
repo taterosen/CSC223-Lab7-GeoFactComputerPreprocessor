@@ -1,5 +1,8 @@
 package geometry_objects;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -71,8 +74,8 @@ public class Segment extends GeometricObject
 	public boolean HasSubSegment(Segment candidate)
 	{
 
-        return this.pointLiesOnSegment(candidate.getPoint1()) &&
-        		this.pointLiesOnSegment(candidate.getPoint2());
+		return this.pointLiesOnSegment(candidate.getPoint1()) &&
+				this.pointLiesOnSegment(candidate.getPoint2());
 	}
 
 	/**
@@ -96,7 +99,7 @@ public class Segment extends GeometricObject
 	public boolean equals(Object obj)
 	{
 		if (obj == null) return false;
-		
+
 		if (!(obj instanceof Segment)) return false;
 		Segment that = (Segment)obj;
 
@@ -152,9 +155,17 @@ public class Segment extends GeometricObject
 	 */
 	public boolean coincideWithoutOverlap(Segment that)
 	{
-		
+		if(!isCollinearWith(that)) return false;
+
+		if(this.pointLiesBetweenEndpoints(that.getPoint1()) ||
+				this.pointLiesBetweenEndpoints(that.getPoint2())) return false;
+
+		if(that.pointLiesBetweenEndpoints(this.getPoint1()) ||
+				that.pointLiesBetweenEndpoints(this.getPoint2())) return false;
+
+		return true;
 	}
-	
+
 	/**
 	 * 
 	 * @return the set of Points that lie on this segment (ordered lexicographically)
@@ -163,7 +174,18 @@ public class Segment extends GeometricObject
 	{
 		SortedSet<Point> pointsOn = new TreeSet<Point>();
 
-        // TODO
+		Collections.sort(new ArrayList<Point>(points), new Comparator<Point>() {
+
+			@Override
+			public int compare(Point p1, Point p2) {
+				return p1.compareTo(p2);
+			}
+
+		});
+
+		for(Point p: points) {
+			pointsOn.add(p);
+		}
 
 		return pointsOn;
 	}
