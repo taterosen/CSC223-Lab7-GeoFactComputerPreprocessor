@@ -1,5 +1,6 @@
 package preprocessor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -62,7 +63,7 @@ public class Preprocessor
 		//
 		// Implicit Points
 		//
-		_implicitPoints = ImplicitPointPreprocessor.compute(_pointDatabase, _givenSegments.stream().toList());
+		_implicitPoints = ImplicitPointPreprocessor.compute(_pointDatabase, new ArrayList<Segment>(_givenSegments));
 
 		//
 		// Implicit Segments attributed to implicit points
@@ -86,5 +87,21 @@ public class Preprocessor
 		//
 		_allMinimalSegments.forEach((segment) -> _segmentDatabase.put(segment, segment));
 		_nonMinimalSegments.forEach((segment) -> _segmentDatabase.put(segment, segment));
+	}
+	
+	protected Set<Segment> computeImplicitBaseSegments(Set<Point> points){
+		
+		
+		return null;
+	}
+	
+	protected Set<Segment> identifyAllMinimalSegments(Set<Point> points, Set<Segment> segments, Set<Segment> iSegments){
+		
+		return null;
+	}
+	
+	protected Set<Segment> constructAllNonMinimalSegments(Set<Segment> minimalSegments){
+		
+		return null;
 	}
 }
