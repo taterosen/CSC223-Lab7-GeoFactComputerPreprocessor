@@ -91,13 +91,26 @@ public class Preprocessor
 	
 	protected Set<Segment> computeImplicitBaseSegments(Set<Point> points){
 		
+		Set<Segment> segments = new HashSet<Segment>();
 		
-		return null;
+		//loop over implicit point
+		for (Point point : points) {
+			
+			//loop over segements
+			for(Segment seg :_givenSegments) {
+				
+				if(seg.pointLiesOnSegment(point)) {
+					segments.add(new Segment(point,seg.getPoint1()));
+					segments.add(new Segment(point,seg.getPoint2()));
+				}
+			}
+		}
+		return segments;
 	}
 	
 	protected Set<Segment> identifyAllMinimalSegments(Set<Point> points, Set<Segment> segments, Set<Segment> iSegments){
 		
-		return null;
+		
 	}
 	
 	protected Set<Segment> constructAllNonMinimalSegments(Set<Segment> minimalSegments){

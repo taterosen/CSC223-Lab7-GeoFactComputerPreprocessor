@@ -70,7 +70,9 @@ public class Segment extends GeometricObject
 
 	public boolean HasSubSegment(Segment candidate)
 	{
-        // TODO
+
+        return this.pointLiesOnSegment(candidate.getPoint1()) &&
+        		this.pointLiesOnSegment(candidate.getPoint2());
 	}
 
 	/**
@@ -150,7 +152,7 @@ public class Segment extends GeometricObject
 	 */
 	public boolean coincideWithoutOverlap(Segment that)
 	{
-        // TODO
+		
 	}
 	
 	/**
