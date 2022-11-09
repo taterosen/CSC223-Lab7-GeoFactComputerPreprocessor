@@ -48,13 +48,15 @@ import input.exception.ParseException;
 public class JSONParser
 {
 	protected ComponentNode  _astRoot;
+	protected DefaultBuilder _builder;
 
 	/**
 	 * constructor. sets _astRoot to null
 	 */
-	public JSONParser()
+	public JSONParser(DefaultBuilder builder)
 	{
 		_astRoot = null;
+		_builder = builder;
 	}
 
 	/**
@@ -75,8 +77,11 @@ public class JSONParser
 	 */
 	public ComponentNode parse(String str) throws ParseException
 	{
+		System.out.println(str);
+		
 		// Parsing is accomplished via the JSONTokenizer class
 		JSONTokener tokenizer = new JSONTokener(str);
+		
 		JSONObject  JSONroot = (JSONObject)tokenizer.nextValue();
 		
 		try
@@ -91,15 +96,13 @@ public class JSONParser
 
 		JSONObject fig = JSONroot.getJSONObject(JSON_Constants.JSON_FIGURE);
 		
-		DefaultBuilder builder = new GeometryBuilder();
-
 		String description = parseDescription(fig.getString(JSON_Constants.JSON_DESCRIPTION));
-		PointNodeDatabase points = parsePoints(fig.getJSONArray(JSON_Constants.JSON_POINT_S), builder);
+		PointNodeDatabase points = parsePoints(fig.getJSONArray(JSON_Constants.JSON_POINT_S), _builder);
 		
-		SegmentNodeDatabase segments = parseSegments(fig.getJSONArray(JSON_Constants.JSON_SEGMENTS), points, builder);
+		SegmentNodeDatabase segments = parseSegments(fig.getJSONArray(JSON_Constants.JSON_SEGMENTS), points, _builder);
 		
 		 
-		return builder.buildFigureNode(description, points, segments);
+		return _builder.buildFigureNode(description, points, segments);
 	}
 	
 	/**

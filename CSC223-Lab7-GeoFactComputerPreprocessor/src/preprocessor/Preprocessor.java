@@ -109,11 +109,15 @@ public class Preprocessor
 	}
 	
 	protected Set<Segment> identifyAllMinimalSegments(Set<Point> points, Set<Segment> segments, Set<Segment> iSegments){
+		return iSegments;
 		
 		
 	}
 	
 	protected Set<Segment> constructAllNonMinimalSegments(Set<Segment> minimalSegments){
+		
+		Set<Segment> segments = 
+		
 		
 		return null;
 	}

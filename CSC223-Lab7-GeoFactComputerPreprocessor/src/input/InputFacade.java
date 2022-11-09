@@ -20,6 +20,7 @@ import input.components.FigureNode;
 import input.components.point.PointNode;
 import input.components.segment.SegmentNode;
 import input.parser.JSONParser;
+import utilities.io.FileUtilities;
 
 public class InputFacade
 {
@@ -31,8 +32,13 @@ public class InputFacade
 	 */
 	public static FigureNode extractFigure(String filename)
 	{
-		JSONParser parser = new JSONParser();
-		return (FigureNode)parser.parse(filename.toString());
+		JSONParser parser = new JSONParser(new GeometryBuilder());
+		
+		String figureStr = utilities.io.FileUtilities.readFileFilterComments(filename);
+		
+		
+		
+		return (FigureNode)parser.parse(figureStr);
 	}
 	
 	/**
@@ -43,10 +49,8 @@ public class InputFacade
 	 * @param filename
 	 * @return a pair <set of points as a database, set of segments>
 	 */
-	public static Map.Entry<PointDatabase, Set<Segment>> toGeometryRepresentation(String filename)
-	{
-		FigureNode figure = extractFigure(filename);
-		
+	public static Map.Entry<PointDatabase, Set<Segment>> toGeometryRepresentation(FigureNode figure)
+	{		
 		//change PointNodes in PointNodeDatabase into Points, then add to PointDatabase
 		PointDatabase pointData = new PointDatabase();
 		

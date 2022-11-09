@@ -14,6 +14,7 @@ import geometry_objects.Segment;
 import geometry_objects.points.Point;
 import geometry_objects.points.PointDatabase;
 import input.InputFacade;
+import input.components.FigureNode;
 import preprocessor.delegates.ImplicitPointPreprocessor;
 
 class PreprocessorTest
@@ -21,8 +22,9 @@ class PreprocessorTest
 	@Test
 	void test_implicit_crossings()
 	{
-		Map.Entry<PointDatabase, Set<Segment>> pair = InputFacade.toGeometryRepresentation("fully_connected_irregular_polygon.json");
+		FigureNode fig = InputFacade.extractFigure("jsonfiles/fully_connected_irregular_polygon.json");
 
+		Map.Entry<PointDatabase, Set<Segment>> pair = InputFacade.toGeometryRepresentation(fig);
 		PointDatabase points = pair.getKey();
 
 		Set<Segment> segments = pair.getValue();
