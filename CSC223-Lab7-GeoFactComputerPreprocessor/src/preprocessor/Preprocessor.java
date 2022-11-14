@@ -49,9 +49,9 @@ public class Preprocessor
 	{
 		_pointDatabase  = points;
 		_givenSegments = segments;
-		
+
 		_segmentDatabase = new HashMap<Segment, Segment>();
-		
+
 		analyze();
 	}
 
@@ -88,17 +88,15 @@ public class Preprocessor
 		_allMinimalSegments.forEach((segment) -> _segmentDatabase.put(segment, segment));
 		_nonMinimalSegments.forEach((segment) -> _segmentDatabase.put(segment, segment));
 	}
-	
-	protected Set<Segment> computeImplicitBaseSegments(Set<Point> points){
-		
+
+	protected Set<Segment> computeImplicitBaseSegments(Set<Point> implicitPoints){
+
 		Set<Segment> segments = new HashSet<Segment>();
-		
+
 		//loop over implicit point
-		for (Point point : points) {
-			
+		for (Point point : implicitPoints) {
 			//loop over segments
 			for(Segment seg :_givenSegments) {
-				
 				if(seg.pointLiesOnSegment(point)) {
 					segments.add(new Segment(point,seg.getPoint1()));
 					segments.add(new Segment(point,seg.getPoint2()));
@@ -107,18 +105,53 @@ public class Preprocessor
 		}
 		return segments;
 	}
-	
-	protected Set<Segment> identifyAllMinimalSegments(Set<Point> points, Set<Segment> segments, Set<Segment> iSegments){
-		return iSegments;
-		
-		
+
+
+	protected Set<Segment> identifyAllMinimalSegments(Set<Point> implicitPoints, Set<Segment> givenSegments, Set<Segment> implicitSegments){
+		Set<Segment> segments = new HashSet<Segment>();
+
+		for (Segment seg: givenSegments) {
+
+			for (Point implicpoint : implicitPoints) {
+
+				if (!seg.pointLiesOnSegment(implicpoint)) {
+					segments.add(seg);
+				}
+			}
+		}
+		segments.addAll(implicitSegments);
+		return segments;
+
 	}
-	
+
 	protected Set<Segment> constructAllNonMinimalSegments(Set<Segment> minimalSegments){
+
+		Set<Segment> segments = new HashSet<Segment>();
+
+		for (Segment minSeg : minimalSegments) {
+
+			for(Segment minSeg2 : minimalSegments) {
+
+				//if the first point from first segment  and first point from second segment
+				if(minSeg.getPoint1().equals(minSeg2.getPoint1())) {
+					segments.add(new Segment(minSeg.getPoint2(), minSeg2.getPoint2()));	
+				}
+				//if the first point from first segme.nt and second point from second segment
+				if (minSeg.getPoint1().equals(minSeg2.getPoint2())) {
+					segments.add(new Segment(minSeg.getPoint2(), minSeg2.getPoint1()));	
+				}
+				//if the second point from first segment and first point from second segment
+				if(minSeg.getPoint2().equals(minSeg2.getPoint1())) {
+					segments.add(new Segment(minSeg.getPoint1(), minSeg2.getPoint2()));	
+				}
+				//if the second point from second segment and second point from second segment
+				if(minSeg.getPoint2().equals(minSeg2.getPoint2())) {
+					segments.add(new Segment(minSeg.getPoint1(), minSeg2.getPoint1()));	
+
+				}
+			}
+		}
 		
-		//Set<Segment> segments = 
-		
-		
-		return null;
+		return segments;
 	}
 }
