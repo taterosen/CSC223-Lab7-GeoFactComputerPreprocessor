@@ -95,6 +95,7 @@ public class Preprocessor
 
 		//loop over implicit point
 		for (Point point : implicitPoints) {
+
 			//loop over segments
 			for(Segment seg :_givenSegments) {
 				if(seg.pointLiesOnSegment(point)) {
