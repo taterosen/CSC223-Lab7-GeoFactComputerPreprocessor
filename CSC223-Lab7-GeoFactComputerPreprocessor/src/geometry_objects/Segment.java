@@ -189,4 +189,12 @@ public class Segment extends GeometricObject
 
 		return pointsOn;
 	}
+	@Override
+	public String toString() {
+		StringBuilder sb  = new StringBuilder();
+		
+		sb.append(this.getPoint1() + ", " + (this.getPoint2()));
+		
+		return sb.toString();
+	}
 }
