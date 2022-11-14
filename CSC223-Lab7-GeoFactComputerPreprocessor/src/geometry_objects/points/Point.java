@@ -109,7 +109,8 @@ public class Point implements Comparable<Point>
 
 		Point objAsPoint = (Point) obj;
 		//check obj address and coordinates
-		return this.compareTo(objAsPoint) == 0;
+		return utilities.math.MathUtilities.doubleEquals(this.getX(), objAsPoint.getX()) && 
+				utilities.math.MathUtilities.doubleEquals(this.getY(), objAsPoint.getY());
 	}
 
 	@Override

@@ -176,12 +176,14 @@ public class Segment extends GeometricObject
 		SortedSet<Point> pointsOn = new TreeSet<Point>();
 
 		//sort the given set based on a comparator
-		Collections.sort(new ArrayList<Point>(points), new Comparator<Point>() {
-			@Override
-			public int compare(Point p1, Point p2) {
-				return p1.compareTo(p2);
-			}
-		});
+//		Collections.sort(new ArrayList<Point>(points), new Comparator<Point>() {
+//			@Override
+//			public int compare(Point p1, Point p2) {
+//				return p1.compareTo(p2);
+//			}
+//		});
+		
+		Collections.sort(new ArrayList<Point>(points));
 
 		//add sorted points to the SortedSet to be returned
 		for(Point p: points) {

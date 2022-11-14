@@ -157,42 +157,37 @@ public class Preprocessor
 
 		Set<Segment> segments = new HashSet<Segment>();
 		
-		
-		
-		
-		
-		
-		
-		
-
 		for (Segment minSeg : minimalSegments) {
-			boolean isMinimal = true;
 
 			for(Segment minSeg2 : minimalSegments) {
 				
-				
-				
-				
-
 				//if the first point from first segment  and first point from second segment
-				if(minSeg.getPoint1().equals(minSeg2.getPoint1())) {
+				if(minSeg.getPoint1().equals(minSeg2.getPoint1()) && minSeg.coincideWithoutOverlap(minSeg2)) {
 					segments.add(new Segment(minSeg.getPoint2(), minSeg2.getPoint2()));	
 				}
 				//if the first point from first segme.nt and second point from second segment
-				if (minSeg.getPoint1().equals(minSeg2.getPoint2())) {
+				if (minSeg.getPoint1().equals(minSeg2.getPoint2()) && minSeg.coincideWithoutOverlap(minSeg2)) {
 					segments.add(new Segment(minSeg.getPoint2(), minSeg2.getPoint1()));	
 				}
 				//if the second point from first segment and first point from second segment
-				if(minSeg.getPoint2().equals(minSeg2.getPoint1())) {
+				if(minSeg.getPoint2().equals(minSeg2.getPoint1()) && minSeg.coincideWithoutOverlap(minSeg2)) {
 					segments.add(new Segment(minSeg.getPoint1(), minSeg2.getPoint2()));	
 				}
 				//if the second point from second segment and second point from second segment
-				if(minSeg.getPoint2().equals(minSeg2.getPoint2())) {
+				if(minSeg.getPoint2().equals(minSeg2.getPoint2()) && minSeg.coincideWithoutOverlap(minSeg2)) {
 					segments.add(new Segment(minSeg.getPoint1(), minSeg2.getPoint1()));	
 
 				}
 			}
 		}
+		
+		for(Segment s: _givenSegments) {
+			for(Segment minS: minimalSegments) {
+				if(!s.equals(minS) && s.HasSubSegment(minS))
+					segments.add(s); 
+			}
+		}
+	
 
 		return segments;
 	}
