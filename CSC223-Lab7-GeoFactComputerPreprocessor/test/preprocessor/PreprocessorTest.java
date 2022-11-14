@@ -49,11 +49,11 @@ class PreprocessorTest
 		//
 		//		    An irregular pentagon with 5 C 2 = 10 segments
 
-		Point a_star = new Point(56.0 / 15, 28.0 / 15);
-		Point b_star = new Point(16.0 / 7, 8.0 / 7);
-		Point c_star = new Point(8.0 / 9, 56.0 / 27);
-		Point d_star = new Point(90.0 / 59, 210.0 / 59);
-		Point e_star = new Point(194.0 / 55, 182.0 / 55);
+		Point a_star = new Point("A*", 56.0 / 15, 28.0 / 15);
+		Point b_star = new Point("B*",16.0 / 7, 8.0 / 7);
+		Point c_star = new Point("C*",8.0 / 9, 56.0 / 27);
+		Point d_star = new Point("D*",90.0 / 59, 210.0 / 59);
+		Point e_star = new Point("E*",194.0 / 55, 182.0 / 55);
 
 		assertTrue(iPoints.contains(a_star));
 		//assertTrue(iPoints.contains(b_star));
@@ -65,7 +65,7 @@ class PreprocessorTest
 		// There are 15 implied segments inside the pentagon; see figure above
 		//
 		Set<Segment> iSegments = pp.computeImplicitBaseSegments(iPoints);
-		//assertEquals(15, iSegments.size());
+		assertEquals(15, iSegments.size());
 
 		List<Segment> expectedISegments = new ArrayList<Segment>();
 
@@ -107,6 +107,7 @@ class PreprocessorTest
 		expectedMinimalSegments.add(new Segment(points.getPoint("E"), points.getPoint("A")));
 		
 		Set<Segment> minimalSegments = pp.identifyAllMinimalSegments(iPoints, segments, iSegments);
+		
 		assertEquals(expectedMinimalSegments.size(), minimalSegments.size());
 
 		for (Segment minimalSeg : minimalSegments)

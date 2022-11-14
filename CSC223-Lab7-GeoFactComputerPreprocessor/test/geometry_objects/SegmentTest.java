@@ -37,8 +37,8 @@ class SegmentTest {
 		Segment difSeg = new Segment(new Point(56.0 / 15, 28.0 / 15), new Point(-194.0 / 55, 182.0 / 55));
 		assertFalse(seg.coincideWithoutOverlap(difSeg));
 		
-//		Segment difCollinearSeg = new Segment(new Point(20,20), new Point(30,30));
-//		assertTrue(seg.coincideWithoutOverlap(difCollinearSeg));
+		Segment difCollinearSeg = new Segment(new Point(20,20), new Point(30,30));
+		assertFalse(seg.coincideWithoutOverlap(difCollinearSeg));
 		
 		Segment sharedEndPointSeg = new Segment(new Point(15,15), new Point(30,30));
 		assertTrue(seg.coincideWithoutOverlap(sharedEndPointSeg));
@@ -48,11 +48,11 @@ class SegmentTest {
 		
 		Segment verticalSeg1 = new Segment(new Point(0,0), new Point(0,15));
 		Segment verticalSeg2 = new Segment(new Point(0,20), new Point(0,30));
-		assertTrue(verticalSeg1.coincideWithoutOverlap(verticalSeg2));
+		assertFalse(verticalSeg1.coincideWithoutOverlap(verticalSeg2));
 		
 		Segment horizontalSeg1 = new Segment(new Point(0,0), new Point(0,15));
 		Segment horizontalSeg2 = new Segment(new Point(0,20), new Point(0,30));
-		assertTrue(horizontalSeg1.coincideWithoutOverlap(horizontalSeg2));
+		assertFalse(horizontalSeg1.coincideWithoutOverlap(horizontalSeg2));
 	}
 	
 	@Test

@@ -99,11 +99,40 @@ public class Preprocessor
 			//loop over segments
 			for(Segment seg :_givenSegments) {
 				if(seg.pointLiesOnSegment(point)) {
-					segments.add(new Segment(point,seg.getPoint1()));
-					segments.add(new Segment(point,seg.getPoint2()));
+					Segment newSeg1 = new Segment(point,seg.getPoint1());
+					Segment newSeg2 = new Segment(point,seg.getPoint2());
+					boolean isMinimal1 = true;
+					boolean isMinimal2 = true;
+					
+					for(Point other: implicitPoints) {
+						
+						if(!other.equals(point) && newSeg1.pointLiesOnSegment(other))
+							isMinimal1 = false;
+						if(!other.equals(point) && newSeg2.pointLiesOnSegment(other))
+							isMinimal2 = false;
+						
+					}
+					if(isMinimal1) segments.add(newSeg1);
+					if(isMinimal2) segments.add(newSeg2);
+					
 				}
+
+				for(Point point2: implicitPoints) {
+					if(!point.equals(point2)) {
+						Segment subsegment = new Segment(point, point2);
+						if(seg.HasSubSegment(subsegment)) {
+							segments.add(subsegment);
+						}
+
+					}
+				}
+
 			}
+
 		}
+
+
+
 		return segments;
 	}
 
@@ -112,13 +141,13 @@ public class Preprocessor
 		Set<Segment> segments = new HashSet<Segment>();
 
 		for (Segment seg: givenSegments) {
-
+			boolean isMinimal = true;
 			for (Point implicpoint : implicitPoints) {
-
-				if (!seg.pointLiesOnSegment(implicpoint)) {
-					segments.add(seg);
+				if (seg.pointLiesOnSegment(implicpoint)) {
+					isMinimal = false;
 				}
 			}
+			if(isMinimal) segments.add(seg);
 		}
 		segments.addAll(implicitSegments);
 		return segments;
@@ -128,10 +157,23 @@ public class Preprocessor
 	protected Set<Segment> constructAllNonMinimalSegments(Set<Segment> minimalSegments){
 
 		Set<Segment> segments = new HashSet<Segment>();
+		
+		
+		
+		
+		
+		
+		
+		
 
 		for (Segment minSeg : minimalSegments) {
+			boolean isMinimal = true;
 
 			for(Segment minSeg2 : minimalSegments) {
+				
+				
+				
+				
 
 				//if the first point from first segment  and first point from second segment
 				if(minSeg.getPoint1().equals(minSeg2.getPoint1())) {
@@ -152,7 +194,7 @@ public class Preprocessor
 				}
 			}
 		}
-		
+
 		return segments;
 	}
 }
