@@ -95,9 +95,9 @@ public class Preprocessor
 
 		//loop over implicit point
 		for (Point point : implicitPoints) {
-
 			//loop over segments
 			for(Segment seg :_givenSegments) {
+
 				if(seg.pointLiesOnSegment(point)) {
 					Segment newSeg1 = new Segment(point,seg.getPoint1());
 					Segment newSeg2 = new Segment(point,seg.getPoint2());
@@ -114,7 +114,6 @@ public class Preprocessor
 					}
 					if(isMinimal1) segments.add(newSeg1);
 					if(isMinimal2) segments.add(newSeg2);
-					
 				}
 
 				for(Point point2: implicitPoints) {

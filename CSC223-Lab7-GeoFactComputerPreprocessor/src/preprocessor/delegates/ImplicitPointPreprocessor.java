@@ -30,7 +30,7 @@ public class ImplicitPointPreprocessor
 			for (Segment seg2 : givenSegments) {
 				
 				Point p = IntersectionDelegate.segmentIntersection(seg1, seg2);
-
+				
 				//check that doesn't exist
 				if(p!=null && givenPoints.getPoint(p) == null) {
 					implicitPoints.add(p);
