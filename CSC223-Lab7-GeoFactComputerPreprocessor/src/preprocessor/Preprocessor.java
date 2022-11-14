@@ -96,7 +96,7 @@ public class Preprocessor
 		//loop over implicit point
 		for (Point point : points) {
 			
-			//loop over segements
+			//loop over segments
 			for(Segment seg :_givenSegments) {
 				
 				if(seg.pointLiesOnSegment(point)) {
@@ -116,7 +116,7 @@ public class Preprocessor
 	
 	protected Set<Segment> constructAllNonMinimalSegments(Set<Segment> minimalSegments){
 		
-		Set<Segment> segments = 
+		//Set<Segment> segments = 
 		
 		
 		return null;
