@@ -103,14 +103,14 @@ public class Preprocessor
 					Segment newSeg2 = new Segment(point,seg.getPoint2());
 					boolean isMinimal1 = true;
 					boolean isMinimal2 = true;
-					
+
 					for(Point other: implicitPoints) {
-						
+
 						if(!other.equals(point) && newSeg1.pointLiesOnSegment(other))
 							isMinimal1 = false;
 						if(!other.equals(point) && newSeg2.pointLiesOnSegment(other))
 							isMinimal2 = false;
-						
+
 					}
 					if(isMinimal1) segments.add(newSeg1);
 					if(isMinimal2) segments.add(newSeg2);
@@ -135,37 +135,59 @@ public class Preprocessor
 		return segments;
 	}
 
-
+	/**
+	 * Adds all implicit segments in then decides from given segments which are not already included 
+	 * @param implicitPoints
+	 * @param givenSegments
+	 * @param implicitSegments
+	 * @return set of all minimal segments in the given figure
+	 */
 	protected Set<Segment> identifyAllMinimalSegments(Set<Point> implicitPoints, Set<Segment> givenSegments, Set<Segment> implicitSegments){
-		Set<Segment> segments = new HashSet<Segment>();
 
-		for (Segment seg: givenSegments) {
-			boolean isMinimal = true;
-			for (Point implicpoint : implicitPoints) {
-				if (seg.pointLiesOnSegment(implicpoint)) {
-					isMinimal = false;
-				}
+		Set<Segment> minSegments = new LinkedHashSet<Segment>();
+
+		//all implicit segments will be in the Minimal Segments
+		minSegments.addAll(implicitSegments);
+
+		Set<Point> points = new HashSet<Point>();
+
+		points.addAll(_pointDatabase.getPoints());
+		points.addAll(implicitPoints);
+
+
+		for (Segment seg : givenSegments) {
+			//check all the points for the givenSegments to make sure we have added 
+			//all valid minimalSegments
+			SortedSet <Point> segmentPoints = seg.collectOrderedPointsOnSegment(points);
+
+			//shouldn't be more than 2 points on a segment
+			if(segmentPoints.size() <= 2)
+			{
+				//add checks to see if it is already in set
+				minSegments.add(seg);
 			}
-			if(isMinimal) segments.add(seg);
+
 		}
-		segments.addAll(implicitSegments);
-		return segments;
+
+		return minSegments;
 
 	}
+
 
 	protected Set<Segment> constructAllNonMinimalSegments(Set<Segment> minimalSegments){
 
 		Set<Segment> segments = new HashSet<Segment>();
-		
+
 		for (Segment minSeg : minimalSegments) {
 
 			for(Segment minSeg2 : minimalSegments) {
-				
+
+				//if(minSeg.other(minSeg2.getPoint1()).equals(segments)
 				//if the first point from first segment  and first point from second segment
 				if(minSeg.getPoint1().equals(minSeg2.getPoint1()) && minSeg.coincideWithoutOverlap(minSeg2)) {
 					segments.add(new Segment(minSeg.getPoint2(), minSeg2.getPoint2()));	
 				}
-				//if the first point from first segme.nt and second point from second segment
+				//if the first point from first segment and second point from second segment
 				if (minSeg.getPoint1().equals(minSeg2.getPoint2()) && minSeg.coincideWithoutOverlap(minSeg2)) {
 					segments.add(new Segment(minSeg.getPoint2(), minSeg2.getPoint1()));	
 				}
@@ -180,14 +202,8 @@ public class Preprocessor
 				}
 			}
 		}
-		
-		for(Segment s: _givenSegments) {
-			for(Segment minS: minimalSegments) {
-				if(!s.equals(minS) && s.HasSubSegment(minS))
-					segments.add(s); 
-			}
-		}
-	
+
+
 
 		return segments;
 	}
