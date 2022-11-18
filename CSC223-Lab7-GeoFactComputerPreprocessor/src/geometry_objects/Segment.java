@@ -175,14 +175,12 @@ public class Segment extends GeometricObject
 	{
 		SortedSet<Point> pointsOn = new TreeSet<Point>();
 
-
 		Collections.sort(new ArrayList<Point>(points));
 
 		//add sorted points to the SortedSet to be returned
 		for(Point p: points) {
-			if (this.pointLiesOnSegment(p)) {
+			if(this.pointLiesOnSegment(p))
 				pointsOn.add(p);
-			}
 		}
 
 		return pointsOn;

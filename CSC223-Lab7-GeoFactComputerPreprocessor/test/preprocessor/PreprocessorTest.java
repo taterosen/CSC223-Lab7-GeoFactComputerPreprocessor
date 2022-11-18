@@ -65,6 +65,11 @@ class PreprocessorTest
 		// There are 15 implied segments inside the pentagon; see figure above
 		//
 		Set<Segment> iSegments = pp.computeImplicitBaseSegments(iPoints);
+		System.out.println("actual:");
+		for(Segment s: iSegments) {
+			System.out.println(s);
+		}
+		
 		assertEquals(15, iSegments.size());
 
 		List<Segment> expectedISegments = new ArrayList<Segment>();
@@ -89,6 +94,13 @@ class PreprocessorTest
 		expectedISegments.add(new Segment(a_star, e_star));
 		expectedISegments.add(new Segment(e_star, d_star));
 		expectedISegments.add(new Segment(d_star, c_star));
+		
+		System.out.println();
+		System.out.println();
+		System.out.println("expected:");
+		for(Segment s: expectedISegments) {
+			System.out.println(s);
+		}
 
 		
 		for (Segment iSegment : iSegments)

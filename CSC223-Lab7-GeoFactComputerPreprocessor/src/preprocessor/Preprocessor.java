@@ -89,50 +89,56 @@ public class Preprocessor
 		_nonMinimalSegments.forEach((segment) -> _segmentDatabase.put(segment, segment));
 	}
 
+	/**
+	 * Gets all the implicit base segments in a figure based on given implicit points
+	 * ex:
+	 * 		A---------(X)---------E -> returned implicit base segments: AX, XE
+	 * 
+	 * 
+	 * @param implicitPoints
+	 * @return a set of implicit base segments
+	 */
 	protected Set<Segment> computeImplicitBaseSegments(Set<Point> implicitPoints){
 
-		Set<Segment> segments = new HashSet<Segment>();
+		Set<Segment> segments = new LinkedHashSet<Segment>();
 
-		//loop over implicit point
-		for (Point point : implicitPoints) {
-			//loop over segments
-			for(Segment seg :_givenSegments) {
+		for(Segment seg: _givenSegments) {
+			//get the internal points on current segment and add the endpoints
+			SortedSet<Point> pointsOn = seg.collectOrderedPointsOnSegment(implicitPoints);
+			pointsOn.add(seg.getPoint1());
+			pointsOn.add(seg.getPoint2());
 
-				if(seg.pointLiesOnSegment(point)) {
-					Segment newSeg1 = new Segment(point,seg.getPoint1());
-					Segment newSeg2 = new Segment(point,seg.getPoint2());
-					boolean isMinimal1 = true;
-					boolean isMinimal2 = true;
-
-					for(Point other: implicitPoints) {
-
-						if(!other.equals(point) && newSeg1.pointLiesOnSegment(other))
-							isMinimal1 = false;
-						if(!other.equals(point) && newSeg2.pointLiesOnSegment(other))
-							isMinimal2 = false;
-
-					}
-					if(isMinimal1) segments.add(newSeg1);
-					if(isMinimal2) segments.add(newSeg2);
-				}
-
-				for(Point point2: implicitPoints) {
-					if(!point.equals(point2)) {
-						Segment subsegment = new Segment(point, point2);
-						if(seg.HasSubSegment(subsegment)) {
-							segments.add(subsegment);
-						}
-
-					}
-				}
-
-			}
-
+			//get each implicit segment using set of points that lie on the current segment
+			Set<Segment> segmentsToAdd = getAllSegments(pointsOn);
+			segments.addAll(segmentsToAdd);
 		}
 
-
-
 		return segments;
+	}
+
+	/**
+	 * Creates a list of all segments using a given set of points
+	 * if there are more than just the two endpoints.
+	 * ex:
+	 * 		points: A,X,E -> returned segments: AX, XE
+	 * @param points
+	 * @return a set of segments
+	 */
+	protected Set<Segment> getAllSegments(SortedSet<Point> points){
+		Set<Segment> segmentsToReturn = new LinkedHashSet<Segment>();
+		if(points.size() > 2) {
+			//put points in a list and create set of segments
+			List<Point> pointsAsList = new ArrayList<Point>(points);
+
+			//loop through each point and create segment with its neighbor
+			for(int index = 0; index < pointsAsList.size() - 1; index++) {
+				Point p1 = pointsAsList.get(index);
+				Point p2 = pointsAsList.get(index + 1);
+				segmentsToReturn.add(new Segment(p1,p2));
+			}
+		}
+
+		return segmentsToReturn;
 	}
 
 	/**
@@ -178,33 +184,27 @@ public class Preprocessor
 
 		Set<Segment> segments = new HashSet<Segment>();
 
-		for (Segment minSeg : minimalSegments) {
-
-			for(Segment minSeg2 : minimalSegments) {
-
-				//if(minSeg.other(minSeg2.getPoint1()).equals(segments)
-				//if the first point from first segment  and first point from second segment
-				if(minSeg.getPoint1().equals(minSeg2.getPoint1()) && minSeg.coincideWithoutOverlap(minSeg2)) {
-					segments.add(new Segment(minSeg.getPoint2(), minSeg2.getPoint2()));	
-				}
-				//if the first point from first segment and second point from second segment
-				if (minSeg.getPoint1().equals(minSeg2.getPoint2()) && minSeg.coincideWithoutOverlap(minSeg2)) {
-					segments.add(new Segment(minSeg.getPoint2(), minSeg2.getPoint1()));	
-				}
-				//if the second point from first segment and first point from second segment
-				if(minSeg.getPoint2().equals(minSeg2.getPoint1()) && minSeg.coincideWithoutOverlap(minSeg2)) {
-					segments.add(new Segment(minSeg.getPoint1(), minSeg2.getPoint2()));	
-				}
-				//if the second point from second segment and second point from second segment
-				if(minSeg.getPoint2().equals(minSeg2.getPoint2()) && minSeg.coincideWithoutOverlap(minSeg2)) {
-					segments.add(new Segment(minSeg.getPoint1(), minSeg2.getPoint1()));	
-
+		for(Segment minSeg1: minimalSegments) {
+			//test all minimal segments against each other
+			for(Segment minSeg2: minimalSegments) {
+				if(!minSeg1.equals(minSeg2) && minSeg1.coincideWithoutOverlap(minSeg2)) {
+					//find point that is shared by both segments
+					Point sharedPoint = minSeg1.sharedVertex(minSeg2);
+					
+					if(sharedPoint != null) {
+						//create segment of the points that are not shared (non-minimal)
+						Segment nonMinSeg = new Segment(minSeg1.other(sharedPoint), minSeg2.other(sharedPoint));
+						segments.add(nonMinSeg);
+					}	
 				}
 			}
+			
+			//also must check the given segments against the minimal segments
+			for(Segment s: _givenSegments) {
+					if(!s.equals(minSeg1) && s.HasSubSegment(minSeg1))
+						segments.add(s); 
+			}
 		}
-
-
-
 		return segments;
 	}
 }
