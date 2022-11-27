@@ -125,17 +125,19 @@ public class Preprocessor
 	 * @return a set of segments
 	 */
 	protected Set<Segment> getAllSegments(SortedSet<Point> points){
-		Set<Segment> segmentsToReturn = new LinkedHashSet<Segment>();
-		if(points.size() > 2) {
-			//put points in a list and create set of segments
-			List<Point> pointsAsList = new ArrayList<Point>(points);
+		if(points.size() <= 2) return new LinkedHashSet<Segment>();
 
-			//loop through each point and create segment with its neighbor
-			for(int index = 0; index < pointsAsList.size() - 1; index++) {
-				Point p1 = pointsAsList.get(index);
-				Point p2 = pointsAsList.get(index + 1);
-				segmentsToReturn.add(new Segment(p1,p2));
-			}
+		//put points in a list and create set of segments
+		List<Point> pointsAsList = new ArrayList<Point>(points);
+		
+		//loop through each point and create segment with its neighbor
+		Set<Segment> segmentsToReturn = new LinkedHashSet<Segment>();
+
+		for(int index = 0; index < pointsAsList.size() - 1; index++) {
+			Point p1 = pointsAsList.get(index);
+			Point p2 = pointsAsList.get(index + 1);
+			segmentsToReturn.add(new Segment(p1,p2));
+
 		}
 
 		return segmentsToReturn;
@@ -179,7 +181,14 @@ public class Preprocessor
 
 	}
 
-
+	//rewrite: add minimal segments onto things:
+	// 		while loop based on a queue
+	//		then for loop adding a segment each time
+	// 		do test on A------B----C----D----E  (transitive closure)
+	
+	//		ex: 1seg + 1seg = 2seg
+	//			2seg + 1seg = 3seg
+	//			3seg + 1seg = 4seg, etc 
 	protected Set<Segment> constructAllNonMinimalSegments(Set<Segment> minimalSegments){
 
 		Set<Segment> segments = new HashSet<Segment>();
@@ -190,7 +199,7 @@ public class Preprocessor
 				if(!minSeg1.equals(minSeg2) && minSeg1.coincideWithoutOverlap(minSeg2)) {
 					//find point that is shared by both segments
 					Point sharedPoint = minSeg1.sharedVertex(minSeg2);
-					
+
 					if(sharedPoint != null) {
 						//create segment of the points that are not shared (non-minimal)
 						Segment nonMinSeg = new Segment(minSeg1.other(sharedPoint), minSeg2.other(sharedPoint));
@@ -198,11 +207,11 @@ public class Preprocessor
 					}	
 				}
 			}
-			
+
 			//also must check the given segments against the minimal segments
 			for(Segment s: _givenSegments) {
-					if(!s.equals(minSeg1) && s.HasSubSegment(minSeg1))
-						segments.add(s); 
+				if(!s.equals(minSeg1) && s.HasSubSegment(minSeg1))
+					segments.add(s); 
 			}
 		}
 		return segments;
